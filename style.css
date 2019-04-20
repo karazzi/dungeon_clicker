@@ -1,0 +1,25 @@
+.row {
+  margin-bottom: 10px;
+}
+
+.gold-contianer {
+  position: relative;
+  text-align: center;
+}
+
+.gold-container img {
+  width: 100%;
+  border-radius: 50%;
+}
+
+.gold-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(57, 98, 111);
+}
+
+#goldGained {
+  text-align: center;
+}
