@@ -1,5 +1,5 @@
 function GameData() {
-  this.version = "babytest4";
+  this.version = "babytest10";
   this.gold = null;
   this.goldPerClick = 100;
   this.gpsTotal = 0;
@@ -22,6 +22,10 @@ function GameData() {
     lich: new Quest("lich", 0, 260000, 5100000000, 1, this.costMultiplier),
     ancientDragon: new Quest("ancientDragon", 0, 1600000, 75000000000, 1, this.costMultiplier),
     demigod: new Quest("demigod", 0, 10000000, 1000000000000, 1, this.costMultiplier)
+  };
+  this.upgrades = {
+    1: new Upgrade("delivery", 100, 1, "Delivering messages"),
+    2: new Upgrade("delivery", 500, 5, "Delivering messages")
   }
 }
 
@@ -30,8 +34,16 @@ function Quest(name, owned, gps, baseCost, questMultiplier, multiplier) {
   this.owned = owned;
   this.gps = gps;
   this.baseCost = baseCost;
-  this.questmultiplier = questMultiplier;
+  this.questMultiplier = questMultiplier;
   this.nextCost = Math.ceil(baseCost * Math.pow(multiplier, owned));
+}
+
+function Upgrade(quest, cost, requirement, tooltipText) {
+  this.quest = quest;
+  this.owned = false;
+  this.cost = cost;
+  this.requirement = requirement;
+  this.tooltip = tooltipText;
 }
 
 function initGameData() {
@@ -72,6 +84,7 @@ function goldClick() {
 }
 
 function autoGold() {
+  updateGps();
   var timeElapsed = (Date.now() - game.lastUpdated) / 1000;
   game.lastUpdated = Date.now();
   game.gold += game.gpsTotal * timeElapsed;
@@ -96,7 +109,7 @@ function updateGps(){
   var gpsNew = 0;
   for(quest in game.quests){
     if(game.quests[quest].owned > 0){
-      gpsNew += game.quests[quest].owned * game.quests[quest].gps * game.quests[quest].questmultiplier;
+      gpsNew += game.quests[quest].owned * game.quests[quest].gps * game.quests[quest].questMultiplier;
     }
   }
   game.gpsTotal = parseFloat(gpsNew.toFixed(1));
@@ -139,6 +152,55 @@ function updateButton(quest) {
   }
 }
 
+function initUpgrades(){
+  document.getElementById("upgradeWrapper").innerHTML = '';
+  for(upgrade in game.upgrades) {
+    if(game.upgrades[upgrade].owned === false){
+      var upgradeId = upgrade;
+      var tooltip = game.upgrades[upgrade].tooltip;
+      if(game.upgrades[upgrade].cost < 1000000){
+        var cost = game.upgrades[upgrade].cost;
+      }else{
+        var cost = game.upgrades[upgrade].cost.toExponential(2);
+      }
+      document.getElementById("upgradeWrapper").innerHTML += '<button type="button" name="button" style="display:none;" class="btn btn-success upgrade-btn" id="upgrade' + upgradeId + '" data-toggle="tooltip" data-html="true" title="' + tooltip + ' yields twice as much.<br>' + cost + ' gold." onclick="buyUpgrade(' + upgradeId + ')"></button>'
+    }
+  }
+}
+
+function updateUpgrades() {
+  for(upgrade in game.upgrades) {
+    if(game.upgrades[upgrade].owned === false){
+      quest = game.upgrades[upgrade].quest;
+      buttonId = "upgrade" + upgrade;
+      if(game.quests[quest].owned >= game.upgrades[upgrade].requirement){
+        document.getElementById(buttonId).style.display = "inline";
+      }
+      if(game.gold >= game.upgrades[upgrade].cost){
+        document.getElementById(buttonId).classList.add('btn-success');
+        document.getElementById(buttonId).classList.remove('btn-warning');
+      }else{
+        document.getElementById(buttonId).classList.remove('btn-success');
+        document.getElementById(buttonId).classList.add('btn-warning');
+      }
+    }
+  }
+}
+
+function buyUpgrade(id){
+  var cost = game.upgrades[id].cost;
+  var buttonId = "upgrade" + id;
+  var quest = game.upgrades[id].quest;
+  if(game.gold >= cost){
+    game.gold -= cost;
+    game.upgrades[id].owned = true;
+    game.quests[quest].questMultiplier *= 2;
+    var element = document.getElementById(buttonId);
+    $("#" + buttonId).tooltip("hide");
+    element.parentNode.removeChild(element);
+  }
+}
+
 function startQuest(quest) {
   if(game.quests[quest].nextCost <= game.gold) {
     game.gold -= game.quests[quest].nextCost;
@@ -155,6 +217,8 @@ function startQuest(quest) {
 function resetGame() {
   localStorage.removeItem('dungeonClickerSave');
   game = initGameData();
+  initUpgrades();
+  $('[data-toggle="tooltip"]').tooltip();
   for(quest in game.quests) {
     updateButton(quest);
   }
@@ -165,6 +229,10 @@ function resetGame() {
 window.setTimeout(function(){
   window.setInterval(function(){
     autoGold();
+    for (quest in game.quests) {
+      updateButton(quest);
+    }
+    updateUpgrades();
   }, game.updateInterval);
 }, 100)
 
@@ -177,6 +245,7 @@ window.setInterval(function(){
 // Initialize game
 window.addEventListener("load", function(){
   game = initGameData();
+  initUpgrades();
   updateGps();
   for(quest in game.quests) {
     updateButton(quest);
@@ -203,6 +272,7 @@ window.addEventListener("load", function(){
       game.gold += offlineProd;
     }
   }
-
   updateGold();
+
+  $('[data-toggle="tooltip"]').tooltip();
 });

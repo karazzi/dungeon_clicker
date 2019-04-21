@@ -23,3 +23,11 @@
 #goldGained {
   text-align: center;
 }
+
+.upgrade-btn {
+  height: 50px;
+  width: 50px;
+  padding: 1px;
+  margin: 2px;
+  text-align: center;
+}
