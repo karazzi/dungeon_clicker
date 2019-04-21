@@ -35,35 +35,103 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-4">
             <p id="gpsTotalInfo">Total gps: 0 gold/s</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-12">
-            <h4>Quests</h4>
+            <p><small>You get 50 % of your gold/s while offline</small></p>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-4">
-            <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('delivery');">Deliver messages<p id="deliveryInfo">Owned: 0, cost: 15 gold</p></button>
+            <div class="row">
+              <div class="col-lg-12">
+                <h4>Quests</h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('delivery');">Deliver messages<p id="deliveryInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('rats');">Exterminate rats<p id="ratsInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('kobolds');">Kill rampaging kobolds<p id="koboldsInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('goblins');">Hunt goblins<p id="goblinsInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('orcs');">Slay orcs at their fortress<p id="orcsInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('underdark');">Explore the Underdark<p id="underdarkInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('beholder');">Kill the beholder<p id="beholderInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('youngDragon');">Slay the Young Green Dragon<p id="youngDragonInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('lich');">Destroy the evil lich<p id="lichInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('ancientDragon');">Slay the Ancient Red Dragon<p id="ancientDragonInfo"></p></button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('demigod');">Obliterate the demigod<p id="demigodInfo"></p></button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 offset-lg-2">
+            <div class="row">
+              <div class="col-lg-12">
+                <h4>Upgrades</h4>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-4">
-            <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('rats');">Exterminate rats<p id="ratsInfo">Owned: 0, cost: 100 gold</p></button>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="offlineProdModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <!-- <h4 class="modal-title">Offline production</h4> -->
+          </div>
+          <div class="modal-body">
+            <p id="offlineModalBody"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-4">
-            <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('kobolds');">Kill rampaging kobolds<p id="koboldsInfo">Owned: 0, cost: 1000 gold</p></button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-4">
-            <button type="button" name="button" class="btn btn-info btn-block" onclick="startQuest('goblins');">Kill rampaging kobolds<p id="goblinsInfo">Owned: 0, cost: 13000 gold</p></button>
-          </div>
-        </div>
+
       </div>
     </div>
 
