@@ -328,6 +328,11 @@ function gainPlatinum() {
   resetGame();
   game.goldLifeTime = goldLifeTime;
   game.platinum = availablePlatinum;
+  updatePlatinumCoin();
+}
+
+function updatePlatinumCoin(){
+  document.getElementById("platinumGained").innerHTML = game.platinum;
 }
 
 // Auto gain gold
@@ -380,6 +385,7 @@ window.addEventListener("load", function(){
     }
   }
   updateGold();
+  updatePlatinumCoin();
 
   $('[data-toggle="tooltip"]').tooltip();
 });
