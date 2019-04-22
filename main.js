@@ -1,5 +1,5 @@
 function GameData() {
-  this.version = "babytest10";
+  this.version = "babytest14";
   this.gold = null;
   this.goldPerClick = 100;
   this.gpsTotal = 0;
@@ -25,7 +25,17 @@ function GameData() {
   };
   this.upgrades = {
     1: new Upgrade("delivery", 100, 1, "Delivering messages"),
-    2: new Upgrade("delivery", 500, 5, "Delivering messages")
+    2: new Upgrade("delivery", 500, 5, "Delivering messages"),
+    3: new Upgrade("delivery", 10000, 10, "Delivering messages"),
+    4: new Upgrade("delivery", 100000, 25, "Delivering messages"),
+    5: new Upgrade("rats", 1000, 1, "Exterminating rats"),
+    6: new Upgrade("rats", 5000, 5, "Exterminating rats"),
+    7: new Upgrade("rats", 50000, 25, "Exterminating rats"),
+    8: new Upgrade("rats", 5000000, 50, "Exterminating rats"),
+    9: new Upgrade("kobolds", 11000, 1, "Killing kobolds"),
+    10: new Upgrade("kobolds", 55000, 5, "Killing kobolds"),
+    11: new Upgrade("kobolds", 550000, 25, "Killing kobolds"),
+    12: new Upgrade("kobolds", 55000000, 50, "Killing kobolds")
   }
 }
 
@@ -70,6 +80,17 @@ function initGameData() {
           if (typeof savegame.quests[quest].owned !== "undefined") {
             game.quests[quest].owned = savegame.quests[quest].owned;
             game.quests[quest].nextCost = Math.ceil(game.quests[quest].baseCost * Math.pow(game.costMultiplier, game.quests[quest].owned));
+          }
+        }
+      }
+      for(upgrade in game.upgrades) {
+        if(typeof savegame.upgrades[upgrade] !== "undefined") {
+          if(typeof savegame.upgrades[upgrade].owned !== "undefined") {
+            game.upgrades[upgrade].owned = savegame.upgrades[upgrade].owned;
+            if(game.upgrades[upgrade].owned === true){
+              quest = game.upgrades[upgrade].quest;
+              game.quests[quest].questMultiplier *= 2;
+            }
           }
         }
       }
@@ -120,7 +141,8 @@ function updateGold() {
   if(game.gold < 1000000) {
     goldString = game.gold.toLocaleString('en-us', {maximumFractionDigits: 0});
   }else{
-    goldString = game.gold.toExponential(2);
+    // goldString = game.gold.toExponential(2);
+    goldString = game.gold.commarize();
   }
   document.getElementById("goldGained").innerHTML = goldString;
   gpsString = "Total gps: " + game.gpsTotal + " gold/s";
@@ -130,16 +152,17 @@ function updateGold() {
 function updateButton(quest) {
   var buttonInfo = quest + "Info";
   var costString = '';
+  var questGps = game.quests[quest].gps * game.quests[quest].questMultiplier;
   var gpsString = '';
   if(game.quests[quest].nextCost < 1000000) {
     costString = game.quests[quest].nextCost.toLocaleString('en-us');
   } else {
     costString = game.quests[quest].nextCost.toExponential(2);
   }
-  if(game.quests[quest].gps < 1000000){
-    gpsString = game.quests[quest].gps.toLocaleString('en-us');
+  if(questGps < 1000000){
+    gpsString = questGps.toLocaleString('en-us');
   }else{
-    gpsString = game.quests[quest].gps.toExponential(2);
+    gpsString = questGps.toExponential(2);
   }
   document.getElementById(buttonInfo).innerHTML = "Owned: " + game.quests[quest].owned + ", cost: " + costString + " gold<br>" + gpsString + " gold/s";
 
@@ -280,8 +303,19 @@ window.addEventListener("load", function(){
 // Misc functions
 function commarize() {
   // Alter numbers larger than 1k
-  if (this >= 1e3) {
-    var units = ["k", "M", "B", "T"];
+  if (this >= 1e6) {
+    var units = [
+      "Mill",
+      "Bill",
+      "Trill",
+      "Quad",
+      "Quint",
+      "Sext",
+      "Sept",
+      "Oct",
+      "Non",
+      "Dec"
+    ];
 
     // Divide to get SI Unit engineering style numbers (1e3,1e6,1e9, etc)
     let unit = Math.floor(((this).toFixed(0).length - 1) / 3) * 3
