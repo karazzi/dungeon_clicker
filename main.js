@@ -181,7 +181,7 @@ function updateGold() {
   if(game.gpsTotal < 1e6) {
     gpsString = "Total gps: " + game.gpsTotal.toLocaleString('en-us', {maximumFractionDigits: 0}) + " gold/s";
   } else {
-    gpsString = "Total gps: " + game.gpsTotal.toExponential(8) + " gold/s";
+    gpsString = "Total gps: " + game.gpsTotal.toExponential(2) + " gold/s";
   }
 
   document.getElementById("gpsTotalInfo").innerHTML = gpsString;
