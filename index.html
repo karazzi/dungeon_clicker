@@ -23,16 +23,24 @@
         <div class="row">
           <div class="col-lg-2">
             <div class="gold-container">
-              <img src="img/download.jpg" alt="" onclick="goldClick()">
+              <img src="img/gold_coin.jpg" alt="" onclick="goldClick()">
               <div class="gold-info">
                 <h4 id="goldGained">0</h4>
               </div>
             </div>
           </div>
+          <div class="col-lg-2 offset-lg-6">
+            <div class="platinum-container">
+              <img src="img/platinum_coin.jpg" alt="" onclick="askPlatinum()">
+              <div class="platinum-info">
+                <h4 id="platinumGained">0</h4>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="row">
-          <div class="col-lg-4">
-            <p>Click coin to pick gold from the streets</p>
+          <div class="col-lg-8">
+            <p>Click coin to pick gold from the streets: <span id="goldPerClick"></span></p>
           </div>
         </div>
         <div class="row">
@@ -123,7 +131,6 @@
     <!-- Modal -->
     <div id="offlineProdModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
-
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
@@ -137,7 +144,26 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
+      </div>
+    </div>
 
+    <!-- Modal -->
+    <div id="platinumModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <!-- <h4 class="modal-title">Offline production</h4> -->
+          </div>
+          <div class="modal-body">
+            <p id="platinumModalBody"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success mr-auto" onclick="gainPlatinum()" data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+          </div>
+        </div>
       </div>
     </div>
 

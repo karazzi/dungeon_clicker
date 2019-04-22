@@ -1,11 +1,13 @@
 function GameData() {
-  this.version = "babytest14";
-  this.gold = null;
-  this.goldPerClick = 100;
+  this.version = "babytest20";
+  this.gold = 0;
+  this.goldLifeTime = 0;
+  this.platinum = 0;
+  this.platinumMultiplier = 0.02;
+  this.goldPerClick = 1;
   this.gpsTotal = 0;
   this.updateInterval = 10; //milliseconds
   this.offlineMultiplier = 0.5;
-  this.productionMultiplier = 1;
   this.costMultiplier = 1.15;
   this.lastSave = new Date();
   this.lastSaveMS = Date.now();
@@ -25,17 +27,50 @@ function GameData() {
   };
   this.upgrades = {
     1: new Upgrade("delivery", 100, 1, "Delivering messages"),
-    2: new Upgrade("delivery", 500, 5, "Delivering messages"),
-    3: new Upgrade("delivery", 10000, 10, "Delivering messages"),
-    4: new Upgrade("delivery", 100000, 25, "Delivering messages"),
-    5: new Upgrade("rats", 1000, 1, "Exterminating rats"),
-    6: new Upgrade("rats", 5000, 5, "Exterminating rats"),
-    7: new Upgrade("rats", 50000, 25, "Exterminating rats"),
-    8: new Upgrade("rats", 5000000, 50, "Exterminating rats"),
-    9: new Upgrade("kobolds", 11000, 1, "Killing kobolds"),
-    10: new Upgrade("kobolds", 55000, 5, "Killing kobolds"),
-    11: new Upgrade("kobolds", 550000, 25, "Killing kobolds"),
-    12: new Upgrade("kobolds", 55000000, 50, "Killing kobolds")
+    2: new Upgrade("delivery", 500, 1, "Delivering messages"),
+    3: new Upgrade("delivery", 10e3, 10, "Delivering messages"),
+    4: new Upgrade("delivery", 100e3, 25, "Delivering messages"),
+    5: new Upgrade("rats", 1e3, 1, "Exterminating rats"),
+    6: new Upgrade("rats", 5e3, 5, "Exterminating rats"),
+    7: new Upgrade("rats", 50e3, 25, "Exterminating rats"),
+    8: new Upgrade("rats", 5e6, 50, "Exterminating rats"),
+    9: new Upgrade("kobolds", 11e3, 1, "Killing kobolds"),
+    10: new Upgrade("kobolds", 55e3, 5, "Killing kobolds"),
+    11: new Upgrade("kobolds", 550e3, 25, "Killing kobolds"),
+    12: new Upgrade("kobolds", 55e6, 50, "Killing kobolds"),
+    13: new Upgrade("goblins", 120e3, 1, "Hunting goblins"),
+    14: new Upgrade("goblins", 600e3, 5, "Hunting goblins"),
+    15: new Upgrade("goblins", 6e6, 25, "Hunting goblins"),
+    16: new Upgrade("goblins", 600e6, 50, "Hunting goblins"),
+    17: new Upgrade("orcs", 1.3e6, 1, "Slaying orcs"),
+    18: new Upgrade("orcs", 6.5e6, 5, "Slaying orcs"),
+    19: new Upgrade("orcs", 65e6, 25, "Slaying orcs"),
+    20: new Upgrade("orcs", 6.5e9, 50, "Slaying orcs"),
+    21: new Upgrade("delivery", 10e6, 50, "Delivering messages"),
+    22: new Upgrade("underdark", 14e6, 1, "Your ventures into the Underdark"),
+    23: new Upgrade("underdark", 70e6, 5, "Your ventures into the Underdark"),
+    24: new Upgrade("underdark", 700e6, 25, "Your ventures into the Underdark"),
+    25: new Upgrade("underdark", 70e9, 50, "Your ventures into the Underdark"),
+    26: new Upgrade("beholder", 200e6, 1, "Killing the beholder"),
+    27: new Upgrade("beholder", 1e9, 5, "Killing the beholder"),
+    28: new Upgrade("beholder", 10e9, 25, "Killing the beholder"),
+    29: new Upgrade("beholder", 1e12, 50, "Killing the beholder"),
+    30: new Upgrade("youngDragon", 3.3e9, 1, "Slaying a Young Green Dragon"),
+    31: new Upgrade("youngDragon", 16.5e9, 5, "Slaying a Young Green Dragon"),
+    32: new Upgrade("youngDragon", 165e9, 25, "Slaying a Young Green Dragon"),
+    33: new Upgrade("youngDragon", 16.5e12, 50, "Slaying a Young Green Dragon"),
+    34: new Upgrade("lich", 51e9, 1, "Destroying the lich"),
+    35: new Upgrade("lich", 255e9, 5, "Destroying the lich"),
+    36: new Upgrade("lich", 2.55e12, 25, "Destroying the lich"),
+    37: new Upgrade("lich", 255e12, 50, "Destroying the lich"),
+    38: new Upgrade("ancientDragon", 750e9, 1, "Slaying an Ancient Red Dragon"),
+    39: new Upgrade("ancientDragon", 3.75e12, 5, "Slaying an Ancient Red Dragon"),
+    40: new Upgrade("ancientDragon", 37.5e12, 25, "Slaying an Ancient Red Dragon"),
+    41: new Upgrade("ancientDragon", 3.75e15, 50, "Slaying an Ancient Red Dragon"),
+    42: new Upgrade("demigod", 10e12, 1, "Obliteration of a demigod"),
+    43: new Upgrade("demigod", 50e12, 1, "Obliteration of a demigod"),
+    44: new Upgrade("demigod", 500e12, 1, "Obliteration of a demigod"),
+    45: new Upgrade("demigod", 50e15, 1, "Obliteration of a demigod"),
   }
 }
 
@@ -66,17 +101,13 @@ function initGameData() {
       game.lastUpdated = Date.now(); // Reset timer
     }else{
       if (typeof savegame.gold !== "undefined") game.gold = savegame.gold;
+      if (typeof savegame.goldLifeTime !== "undefined") game.goldLifeTime = savegame.goldLifeTime;
+      if (typeof savegame.platinum !== "undefined") game.platinum = savegame.platinum;
       if (typeof savegame.goldPerClick !== "undefined") game.goldPerClick = savegame.goldPerClick;
-      // if (typeof savegame.gpsTotal !== "undefined") game.gpsTotal = savegame.gpsTotal;
-      if (typeof savegame.productionMultiplier !== "undefined") game.productionMultiplier = savegame.productionMultiplier;
-      // if (typeof savegame.costMultiplier !== "undefined") game.costMultiplier = savegame.costMultiplier;
       if (typeof savegame.lastSave !== "undefined") game.lastSave = savegame.lastSave;
       if (typeof savegame.lastSaveMS !== "undefined") game.lastSaveMS = savegame.lastSaveMS;
       for(quest in game.quests) {
         if(typeof savegame.quests[quest] !== "undefined"){
-          // for (property in game.quests[quest]){
-          //   if (typeof savegame.quests[quest][property] !== "undefined") game.quests[quest][property] = savegame.quests[quest][property];
-          // }
           if (typeof savegame.quests[quest].owned !== "undefined") {
             game.quests[quest].owned = savegame.quests[quest].owned;
             game.quests[quest].nextCost = Math.ceil(game.quests[quest].baseCost * Math.pow(game.costMultiplier, game.quests[quest].owned));
@@ -101,6 +132,7 @@ function initGameData() {
 
 function goldClick() {
   game.gold += game.goldPerClick;
+  game.goldLifeTime += game.goldPerClick;
   updateGold();
 }
 
@@ -109,6 +141,7 @@ function autoGold() {
   var timeElapsed = (Date.now() - game.lastUpdated) / 1000;
   game.lastUpdated = Date.now();
   game.gold += game.gpsTotal * timeElapsed;
+  game.goldLifeTime += game.gpsTotal * timeElapsed;
   updateGold();
 }
 
@@ -130,7 +163,7 @@ function updateGps(){
   var gpsNew = 0;
   for(quest in game.quests){
     if(game.quests[quest].owned > 0){
-      gpsNew += game.quests[quest].owned * game.quests[quest].gps * game.quests[quest].questMultiplier;
+      gpsNew += game.quests[quest].owned * game.quests[quest].gps * game.quests[quest].questMultiplier * (1 + game.platinumMultiplier * game.platinum);
     }
   }
   game.gpsTotal = parseFloat(gpsNew.toFixed(1));
@@ -141,18 +174,23 @@ function updateGold() {
   if(game.gold < 1000000) {
     goldString = game.gold.toLocaleString('en-us', {maximumFractionDigits: 0});
   }else{
-    // goldString = game.gold.toExponential(2);
-    goldString = game.gold.commarize();
+    goldString = game.gold.toExponential(2);
+    // goldString = game.gold.commarize();
   }
   document.getElementById("goldGained").innerHTML = goldString;
-  gpsString = "Total gps: " + game.gpsTotal + " gold/s";
+  if(game.gpsTotal < 1e6) {
+    gpsString = "Total gps: " + game.gpsTotal.toLocaleString('en-us', {maximumFractionDigits: 0}) + " gold/s";
+  } else {
+    gpsString = "Total gps: " + game.gpsTotal.toExponential(8) + " gold/s";
+  }
+
   document.getElementById("gpsTotalInfo").innerHTML = gpsString;
 }
 
 function updateButton(quest) {
   var buttonInfo = quest + "Info";
   var costString = '';
-  var questGps = game.quests[quest].gps * game.quests[quest].questMultiplier;
+  var questGps = game.quests[quest].gps * game.quests[quest].questMultiplier * (1 + game.platinumMultiplier * game.platinum);
   var gpsString = '';
   if(game.quests[quest].nextCost < 1000000) {
     costString = game.quests[quest].nextCost.toLocaleString('en-us');
@@ -176,18 +214,30 @@ function updateButton(quest) {
 }
 
 function initUpgrades(){
+  // Make sure no stray information is present in the upgrade wrapper
   document.getElementById("upgradeWrapper").innerHTML = '';
+
+  // Arrange all upgrades in an array to be able to sort them by cost
+  var sortable = [];
   for(upgrade in game.upgrades) {
     if(game.upgrades[upgrade].owned === false){
-      var upgradeId = upgrade;
-      var tooltip = game.upgrades[upgrade].tooltip;
-      if(game.upgrades[upgrade].cost < 1000000){
-        var cost = game.upgrades[upgrade].cost;
-      }else{
-        var cost = game.upgrades[upgrade].cost.toExponential(2);
-      }
-      document.getElementById("upgradeWrapper").innerHTML += '<button type="button" name="button" style="display:none;" class="btn btn-success upgrade-btn" id="upgrade' + upgradeId + '" data-toggle="tooltip" data-html="true" title="' + tooltip + ' yields twice as much.<br>' + cost + ' gold." onclick="buyUpgrade(' + upgradeId + ')"></button>'
+      sortable.push([upgrade, game.upgrades[upgrade].cost, game.upgrades[upgrade].tooltip]);
     }
+  }
+
+  // Sort by cost - index 1
+  sortable.sort(function(a, b){return a[1] - b[1]});
+
+  // Loop through all sorted upgrades creating buttons for buying.
+  for(val in sortable) {
+    var upgradeId = sortable[val][0];
+    var tooltip = sortable[val][2];
+    if(sortable[val][1] < 1000000){
+      var cost = sortable[val][1].toLocaleString('en-us', {maximumFractionDigits: 0});
+    }else{
+      var cost = sortable[val][1].toExponential(2);
+    }
+    document.getElementById("upgradeWrapper").innerHTML += '<button type="button" name="button" style="display:none;" class="btn btn-success upgrade-btn" id="upgrade' + upgradeId + '" data-toggle="tooltip" data-html="true" title="' + tooltip + ' yields twice as much.<br>' + cost + ' gold." onclick="buyUpgrade(' + upgradeId + ')"></button>'
   }
 }
 
@@ -248,6 +298,38 @@ function resetGame() {
   updateGold();
 }
 
+function askPlatinum(){
+  updatePlatinum();
+  $("#platinumModal").modal();
+}
+
+function updatePlatinum(){
+  var nextCost = Math.pow(10, 12) * (Math.pow(game.platinum + 1, 3) - Math.pow(game.platinum, 3));
+  var availableCoins = Math.floor(Math.cbrt((game.goldLifeTime)/Math.pow(10, 12)));
+
+  document.getElementById("platinumModalBody").innerHTML = '';
+  var platinumString = '';
+  if(nextCost > game.goldLifeTime){
+    var goldDiff = nextCost - (game.goldLifeTime);
+    platinumString = "You need " + goldDiff.toExponential(4) + " gold to buy the next platinum coin.<br>";
+  } else {
+    platinumString = "Resetting now will grant you a total of " + (availableCoins - game.platinum) + " platinum coins.<br>";
+  }
+
+  document.getElementById("platinumModalBody").innerHTML += platinumString;
+
+  var platinumInfo = "<small><em>Each platinum coin increases your gold/s by 2 %.</em></small>";
+  document.getElementById("platinumModalBody").innerHTML += platinumInfo;
+}
+
+function gainPlatinum() {
+  var availablePlatinum = Math.floor(Math.cbrt((game.goldLifeTime)/Math.pow(10, 12)));
+  var goldLifeTime = game.goldLifeTime;
+  resetGame();
+  game.goldLifeTime = goldLifeTime;
+  game.platinum = availablePlatinum;
+}
+
 // Auto gain gold
 window.setTimeout(function(){
   window.setInterval(function(){
@@ -263,11 +345,12 @@ window.setTimeout(function(){
 // Save game every x milliseconds
 window.setInterval(function(){
   saveGame();
-}, 1000)
+}, 15000)
 
 // Initialize game
 window.addEventListener("load", function(){
   game = initGameData();
+  document.getElementById("goldPerClick").innerHTML = game.goldPerClick + " gold/click";
   initUpgrades();
   updateGps();
   for(quest in game.quests) {
@@ -293,6 +376,7 @@ window.addEventListener("load", function(){
       $("#offlineProdModal").modal();
       //Updating mana
       game.gold += offlineProd;
+      game.goldLifeTime += offlineProd;
     }
   }
   updateGold();
